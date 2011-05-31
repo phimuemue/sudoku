@@ -40,6 +40,17 @@ int isCandidate(int number, int candidate){
   return (1<<number)&candidate;
 }
 
+// gives the next possible candidate, given the currently assigned value
+int nextCandidate(int number, int candidate){
+  int i;
+  for (i=number+1; i<=9; ++i){
+    if (isCandidate(i, candidate)){
+      return i;
+    }
+  }
+  return -1;
+}
+
 void printCandidatesInRowInCol(sudoku *s, int row, int col){
   int i, j;
   printf("| ");
@@ -161,6 +172,10 @@ int getCandidateSingleton(int c){
   return 0;
 }
 
+int checkNumber(sudoku* s, int row, int col, int number){
+  
+}
+
 int countSingletons(sudoku* s){
   int count = 0;
   int i;
@@ -279,6 +294,52 @@ void checkTriples(sudoku* s){
   }
 }
 
+// generate list of numbers (resp. their indices) to solve:
+void generateIndexList(sudoku *s, int* indices){
+  int i;
+  int currentIndex = 0;
+  for (i=0; i<81; ++i){
+    if (s->fields[i]==0){
+      indices[currentIndex++] = i;
+    }
+  }
+  for (i=currentIndex; i<81; ++i){
+    indices[i] = -1;
+  }
+}
+
+void bruteForce(sudoku *s){
+  possible originalCandidates[81];
+  int i=0;
+  for (i=0; i<81; ++i){
+    originalCandidates[i] = s->candidates[i];
+  }
+  int indices[81];
+  generateIndexList(s, indices);
+  for (i=0; i<81; ++i){
+    printf("%d, ", indices[i]);
+  }
+  printf("\n");
+  int index;
+  i=0;
+  while (indices[i]!=-1){
+    index = indices[i];
+    printf("index: %d\n", index);
+    int newCandidate = nextCandidate(s->fields[index], s->candidates[index]);
+    if (newCandidate!=-1){
+      s->fields[index]=newCandidate;
+      fixNumber(s, getX(index), getY(index), s->fields[index]);
+      i++;
+      printf("Setting %d to %d...\n", index, s->fields[index]);
+    }
+    else{
+      s->fields[index]=0;
+      s->candidates[index]=originalCandidates[index];
+      i--;
+    }
+  }
+}
+
 int main(int argc, char** argv){
   sudoku *s = readSudokuFromFile("input.txt");
   printSudoku(s);
@@ -295,5 +356,7 @@ int main(int argc, char** argv){
   countSingletons(s);
   printSudoku(s);
   printf ("Singletons: %d, %d\n", initialSingletons, nowSingletons);
+  bruteForce(s);
+  printSudoku(s);
   return 0;
 }
