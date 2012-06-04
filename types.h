@@ -8,7 +8,10 @@ typedef struct _sudoku{
     int fields[81]; // sudoku fields to fill
     int fields2d[9][9];
   };
-  possible candidates[81]; // candidates for each field
+  union {
+    possible candidates[81]; // candidates for each field
+    possible candidates2d[9][9]; // candidates for each field
+  };
 } sudoku;
 
 #endif
