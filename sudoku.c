@@ -1,12 +1,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 
-typedef unsigned int possible;  // possibilities, essentially a bit vector
-
-typedef struct _sudoku{
-  int fields[81]; // sudoku fields to fill
-  possible candidates[81]; // candidates for each field
-} sudoku;
+#include "types.h"
 
 inline int getX(int index){return index/9;}
 inline int getY(int index){return index%9;}
@@ -19,20 +14,6 @@ inline int countBits(int n){
     n >>= 1;
   }
   return count;
-}
-
-void printSudoku(sudoku *s){
-  int i=0; 
-  for (i=0; i<81; ++i){
-    if (s->fields[i]>0){
-      printf("%d ", s->fields[i]);
-    }
-    else {
-      printf(". ");
-    }
-    ((i+1)%9)||printf("\n"); // newline after each 9 digits
-  }
-  printf("\n");
 }
 
 // checks whether number is a possible solution for candidate
@@ -49,58 +30,6 @@ int nextCandidate(int number, int candidate){
     }
   }
   return -1;
-}
-
-void printCandidatesInRowInCol(sudoku *s, int row, int col){
-  int i, j;
-  printf("| ");
-  for (i=9*row; i<9*row+9; ++i){
-    for (j=col; j<=col+2; ++j){
-      if (isCandidate(j, s->candidates[i])){
-	printf("%d ", j);
-      }
-      else {
-	printf("  ");
-      }
-    }
-    printf("| ");
-  }
-  printf("\n");
-}
-
-void printCandidatesInRow(sudoku *s, int row){
-  printf("+-----------------------------------------------------------------------+\n");
-  printCandidatesInRowInCol(s, row, 1);
-  printCandidatesInRowInCol(s, row, 4);
-  printCandidatesInRowInCol(s, row, 7);
-}
-
-void printCandidates(sudoku *s){
-  int i;
-  for (i=0; i<9; ++i){
-    printCandidatesInRow(s, i);
-  }
-  printf("+-----------------------------------------------------------------------+\n");
-}
-
-sudoku* readSudokuFromFile(const char* path){
-  FILE *f = fopen(path, "r");
-  sudoku* res = (sudoku*)malloc(sizeof(sudoku));
-  int i;
-  for (i=0; i<81; ++i){
-    res->fields[i]=fgetc(f)-'0';
-    if (res->fields[i]<=0 || res->fields[i]>9){
-      res->fields[i]=0;
-    }
-    if (res->fields[i]>0){
-      res->candidates[i]=(1<<res->fields[i]);
-    }
-    else{
-      res->candidates[i]=(1<<9)-1; // all candidates possible (1 to 9, not 0)
-    }
-  }
-  fclose(f);
-  return res;
 }
 
 void removeCandidatesInRow(sudoku* s, int row, int col, int number){
@@ -344,19 +273,19 @@ int main(int argc, char** argv){
   sudoku *s = readSudokuFromFile("input.txt");
   printSudoku(s);
   printCandidates(s);
-  int initialSingletons = countSingletons(s);
-  fixSingletons(s);
-  printCandidates(s);
-  int nowSingletons = countSingletons(s);
-  printSudoku(s);
-  checkTriples(s);
-  countSingletons(s);
-  checkTriples(s);
-  printCandidates(s);
-  countSingletons(s);
-  printSudoku(s);
-  printf ("Singletons: %d, %d\n", initialSingletons, nowSingletons);
-  bruteForce(s);
-  printSudoku(s);
+  /* int initialSingletons = countSingletons(s); */
+  /* fixSingletons(s); */
+  /* printCandidates(s); */
+  /* int nowSingletons = countSingletons(s); */
+  /* printSudoku(s); */
+  /* checkTriples(s); */
+  /* countSingletons(s); */
+  /* checkTriples(s); */
+  /* printCandidates(s); */
+  /* countSingletons(s); */
+  /* printSudoku(s); */
+  /* printf ("Singletons: %d, %d\n", initialSingletons, nowSingletons); */
+  /* bruteForce(s); */
+  /* printSudoku(s); */
   return 0;
 }

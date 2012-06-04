@@ -1,0 +1,1 @@
+Program("sudoku",Glob("*.c"))
