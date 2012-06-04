@@ -16,34 +16,45 @@ void printSudoku(sudoku *s){
 
 void printCandidatesInRowInCol(sudoku *s, int row, int col){
   int i, j;
-  printf("| ");
+  printf("|");
   for (i=9*row; i<9*row+9; ++i){
     if (s->fields[i]){
       if (col==4){
-	printf("  %d   ", s->fields[i]);
+	printf(" %d ", s->fields[i]);
       }
       else {
-	printf("      ");
+	printf("   ");
       }
     }
     else {
       for (j=col; j<=col+2; ++j){
 	if (isCandidate(j, s->candidates[i])){
 	  //printf("%d ", j);
-	  printf("* ");
+	  printf("*");
 	}
 	else {
-	  printf("  ");
+	  printf(" ");
 	}
       }
     }
-    printf("| ");
+    // TODO: Maybe there's an asci character for "||"
+    if (i%3==2){
+      printf("|");
+    }
+    else {
+      printf("|");
+    }
   }
   printf("\n");
 }
 
 void printCandidatesInRow(sudoku *s, int row){
-  printf("+-----------------------------------------------------------------------+\n");
+  if (row%3!=0){
+    printf("+-----------------------------------+\n");
+  }
+  else {
+    printf("+===================================+\n");
+  }
   printCandidatesInRowInCol(s, row, 1);
   printCandidatesInRowInCol(s, row, 4);
   printCandidatesInRowInCol(s, row, 7);
@@ -54,6 +65,6 @@ void printCandidates(sudoku *s){
   for (i=0; i<9; ++i){
     printCandidatesInRow(s, i);
   }
-  printf("+-----------------------------------------------------------------------+\n");
+  printf("+===================================+\n");
 }
 
