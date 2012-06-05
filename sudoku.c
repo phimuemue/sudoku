@@ -36,47 +36,47 @@ int nextCandidate(int number, int candidate){
 }
 
 void removeCandidatesInRow(sudoku* s, int row, int col, int number){
-  printf("Removing candidates in row (%d, %d) => %d ...\n", row, col, getIndex(col, row));
+  //printf("Removing candidates in row (%d, %d) => %d ...\n", row, col, getIndex(col, row));
   int x, y=row;
   for (x=0; x<9; ++x){
     if (x!=col){
       int index = getIndex(x,y);
-      printf("%d, ", index);
+      //printf("%d, ", index);
       s->candidates[index] = s->candidates[index] & ~(1<<number);      
     }
   }
-  printf("\n");
+  //printf("\n");
 }
 
 void removeCandidatesInCol(sudoku* s, int row, int col, int number){
-  printf("Removing candidates in col (%d, %d) => %d ...\n", row, col, getIndex(col, row));
+  //printf("Removing candidates in col (%d, %d) => %d ...\n", row, col, getIndex(col, row));
   int x=col, y;
   for (y=0; y<9; ++y){
     if (y!=row){
       int index = getIndex(x,y);
-      printf("%d, ", index);
+      //printf("%d, ", index);
       s->candidates[index] = s->candidates[index] & ~(1<<number);      
     }
   }
-  printf("\n");
+  //printf("\n");
 }
 
 void removeCandidatesInBox(sudoku* s, int row, int col, int number){
-  printf("Removing candidates in box (%d, %d) => %d ...\n", row, col, getIndex(col, row));
+  //printf("Removing candidates in box (%d, %d) => %d ...\n", row, col, getIndex(col, row));
   int boxX = 3 * (row / 3);
   int boxY = 3 * (col / 3);
-  printf("Removing candidates in box (%d, %d) => %d ...\n", boxX, boxY, getIndex(col, row));
+  //printf("Removing candidates in box (%d, %d) => %d ...\n", boxX, boxY, getIndex(col, row));
   int x, y;
   for (x=boxX; x<boxX+3; ++x){
     for (y=boxY; y<boxY+3; ++y){
       if (x != row || y != col){
-	printf ("%d, ", getIndex(y,x));
+	//printf ("%d, ", getIndex(y,x));
 	int index = getIndex(y,x);
 	s->candidates[index] = s->candidates[index] & ~(1<<number);      	
       }
     }
   }
-  printf("\n");
+  //printf("\n");
 }
 
 void fixNumber(sudoku* s, int row, int col, int number){
@@ -268,27 +268,18 @@ void bruteForce(sudoku *s){
   }
 }
 
-int main(int argc, char** argv){
-  sudoku *s = readSudokuFromFile("input.txt");
-  printSudoku(s);
+int solve(sudoku* s){
   fixGivens(s);
-  printCandidates(s);
   fixSingletons(s);
-  printCandidates(s);
-  backtrack(s);
-  printCandidates(s);
-  /* int initialSingletons = countSingletons(s); */
-  /* printCandidates(s); */
-  /* int nowSingletons = countSingletons(s); */
-  /* printSudoku(s); */
-  /* checkTriples(s); */
-  /* countSingletons(s); */
-  /* checkTriples(s); */
-  /* printCandidates(s); */
-  /* countSingletons(s); */
-  /* printSudoku(s); */
-  /* printf ("Singletons: %d, %d\n", initialSingletons, nowSingletons); */
-  /* bruteForce(s); */
-  /* printSudoku(s); */
+  backtrack(s);  
+}
+
+int main(int argc, char** argv){
+  sudoku *s; 
+  while(s=readSudokuFromFile("input.txt")){
+    solve(s);
+    printSudoku(s);
+    free(s);
+  }
   return 0;
 }

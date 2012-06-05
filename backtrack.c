@@ -9,12 +9,7 @@ int checkNumber(sudoku* s, int row, int col, int number){
   int i=0;
   assert(number<=9 && number>=1);
   for (i=0; i<9; ++i){
-    if(s->fields2d[row][i]==number && i!=col){
-      return 0;
-    }
-  }
-  for (i=0; i<9; ++i){
-    if(s->fields2d[i][col]==number && i!=row){
+    if((s->fields2d[row][i]==number && i!=col) || (s->fields2d[i][col]==number && i!=row)){
       return 0;
     }
   }
@@ -23,7 +18,7 @@ int checkNumber(sudoku* s, int row, int col, int number){
   int x, y;
   for (x=boxX; x<boxX+3; ++x){
     for (y=boxY; y<boxY+3; ++y){
-      if ((x != row || y != col) && s->fields2d[x][y]==number){
+      if (s->fields2d[x][y]==number && (x != row || y != col)){
 	return 0;
       }
     }
@@ -96,7 +91,8 @@ int backtrack(sudoku* s){
   }
   countUnsolved=i;
 
-#if BACKTRACK_SORTING_HEURISTIC==1
+#if BACKTRACK_SORT_HEURISTIC==1
+  printf("Qsorting");
   qsort(unsolvedIndices, countUnsolved, sizeof(int), compareTwoCells);
 #endif
 
