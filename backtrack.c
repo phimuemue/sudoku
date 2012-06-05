@@ -2,6 +2,7 @@
 
 // we allow ourselfes some globals
 int firstUnsolved;
+sudoku* current;
 
 // checks whether a number can be set in a certain field
 int checkNumber(sudoku* s, int row, int col, int number){
@@ -78,7 +79,12 @@ int internal_backtrack(sudoku* s, int index){
   return 0;
 }
 
+int compareTwoCells (const void* a, const void* b){
+  return (countBits(current->candidates[*(int*)a]) - countBits(current->candidates[*(int*)b]));
+}
+
 int backtrack(sudoku* s){
+  current = s;
   int unsolvedIndices[81];
   printf("Backtracking...\n");
   int nextUnsolved=getNextUnsolved(s, -1);
@@ -90,10 +96,14 @@ int backtrack(sudoku* s){
   }
   countUnsolved=i;
 
+#if BACKTRACK_SORTING_HEURISTIC==1
+  qsort(unsolvedIndices, countUnsolved, sizeof(int), compareTwoCells);
+#endif
+
   // this is debug output
   /* for (i=0; i<countUnsolved; ++i){ */
   /*   int ci=unsolvedIndices[i]; */
-  /*   printf("Unsolved cell at %d => (%d, %d).\n", ci, getX(ci), getY(ci)); */
+  /*   printf("Unsolved cell at %d => (%d, %d) | %d.\n", ci, getX(ci), getY(ci), countBits(s->candidates[ci])); */
   /* } */
 
   // now solving
