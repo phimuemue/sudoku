@@ -1,8 +1,10 @@
 #include <stdio.h>
 #include <stdlib.h>
+#include <assert.h>
 
 #include "types.h"
 #include "singletons.h"
+#include "backtrack.h"
 
 inline int getX(int index){return index/9;}
 inline int getY(int index){return index%9;}
@@ -100,10 +102,6 @@ int getCandidateSingleton(int c){
     }
   }
   return 0;
-}
-
-int checkNumber(sudoku* s, int row, int col, int number){
-  
 }
 
 int countSingletons(sudoku* s){
@@ -276,6 +274,8 @@ int main(int argc, char** argv){
   fixGivens(s);
   printCandidates(s);
   fixSingletons(s);
+  printCandidates(s);
+  backtrack(s);
   printCandidates(s);
   /* int initialSingletons = countSingletons(s); */
   /* printCandidates(s); */
