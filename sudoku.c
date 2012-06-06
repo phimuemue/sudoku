@@ -12,9 +12,13 @@ inline int getIndex(int x, int y){return 9*y+x;}
 
 inline int countBits(int n){
   int count = 0;
-  while (n) {
-    count += n & 0x1u;
-    n >>= 1;
+  /* while (n) { */
+  /*   count += n & 0x1u; */
+  /*   n >>= 1; */
+  /* } */
+  int i;
+  for (i=1; i<10; ++i){
+    if((1<<i)&n) count++;
   }
   return count;
 }
@@ -236,41 +240,11 @@ void generateIndexList(sudoku *s, int* indices){
   }
 }
 
-void bruteForce(sudoku *s){
-  possible originalCandidates[81];
-  int i=0;
-  for (i=0; i<81; ++i){
-    originalCandidates[i] = s->candidates[i];
-  }
-  int indices[81];
-  generateIndexList(s, indices);
-  for (i=0; i<81; ++i){
-    printf("%d, ", indices[i]);
-  }
-  printf("\n");
-  int index;
-  i=0;
-  while (indices[i]!=-1){
-    index = indices[i];
-    printf("index: %d\n", index);
-    int newCandidate = nextCandidate(s->fields[index], s->candidates[index]);
-    if (newCandidate!=-1){
-      s->fields[index]=newCandidate;
-      fixNumber(s, getX(index), getY(index), s->fields[index]);
-      i++;
-      printf("Setting %d to %d...\n", index, s->fields[index]);
-    }
-    else{
-      s->fields[index]=0;
-      s->candidates[index]=originalCandidates[index];
-      i--;
-    }
-  }
-}
-
 int solve(sudoku* s){
   fixGivens(s);
   fixSingletons(s);
+  printCandidates(s);
+  fixPairs(s);
   backtrack(s);  
 }
 

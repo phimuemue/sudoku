@@ -18,7 +18,7 @@ sudoku* getNextSudoku(FILE* f){
       res->candidates[i]=(1<<res->fields[i]);
     }
     else{
-      res->candidates[i]=(1<<10)-1; // all candidates possible (1 to 9, not 0)
+      res->candidates[i]=(1<<10)-1u; // all candidates possible (1 to 9, not 0)
     }
   }
   if (fgetc(f)==EOF){
