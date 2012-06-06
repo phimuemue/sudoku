@@ -242,9 +242,10 @@ void generateIndexList(sudoku *s, int* indices){
 
 int solve(sudoku* s){
   fixGivens(s);
-  fixSingletons(s);
+  if (fixSingletons(s)) printf("Singletons found.\n");
+  if (fixPairs(s)) printf("Pairs found.\n");
+  if (fixTriples(s)) printf("Triples found.\n");
   printCandidates(s);
-  fixPairs(s);
   backtrack(s);  
 }
 

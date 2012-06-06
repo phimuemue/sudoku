@@ -98,5 +98,7 @@ int fixSingletons(sudoku* s){
     //printCandidates(s);
     //printf("Found singletons. Trying again.\n");
     fixSingletons(s);
+    return 1;
   }
+  return 0;
 }
